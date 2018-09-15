@@ -116,6 +116,9 @@ static const struct ieee80211_regdomain ath_world_regdom_67_68_6A_6C = {
 
 static bool dynamic_country_user_possible(struct ath_regulatory *reg)
 {
+	if (config_enabled(CONFIG_ATH_USER_REGD))
+		return true;
+
 	if (config_enabled(CONFIG_ATH_REG_DYNAMIC_USER_CERT_TESTING))
 		return true;
 
@@ -188,6 +191,8 @@ static bool dynamic_country_user_possible(struct ath_regulatory *reg)
 
 static bool ath_reg_dyn_country_user_allow(struct ath_regulatory *reg)
 {
+	if (config_enabled(CONFIG_ATH_USER_REGD))
+		return true;
 	if (!config_enabled(CONFIG_ATH_REG_DYNAMIC_USER_REG_HINTS))
 		return false;
 	if (!dynamic_country_user_possible(reg))
@@ -345,6 +350,9 @@ ath_reg_apply_beaconing_flags(struct wiphy *wiphy,
 	struct ieee80211_channel *ch;
 	unsigned int i;
 
+	if (config_enabled(CONFIG_ATH_USER_REGD))
+		return;
+
 	for (band = 0; band < IEEE80211_NUM_BANDS; band++) {
 		if (!wiphy->bands[band])
 			continue;
@@ -378,6 +386,9 @@ ath_reg_apply_ir_flags(struct wiphy *wiphy,
 {
 	struct ieee80211_supported_band *sband;
 
+	if (config_enabled(CONFIG_ATH_USER_REGD))
+		return;
+
 	sband = wiphy->bands[IEEE80211_BAND_2GHZ];
 	if (!sband)
 		return;
@@ -406,6 +417,9 @@ static void ath_reg_apply_radar_flags(struct wiphy *wiphy,
 	struct ieee80211_supported_band *sband;
 	struct ieee80211_channel *ch;
 	unsigned int i;
+
+	if (config_enabled(CONFIG_ATH_USER_REGD))
+		return;
 
 	if (!wiphy->bands[IEEE80211_BAND_5GHZ])
 		return;
@@ -638,6 +652,10 @@ ath_regd_init_wiphy(struct ath_regulatory *reg,
 	const struct ieee80211_regdomain *regd;
 
 	wiphy->reg_notifier = reg_notifier;
+
+	if (config_enabled(CONFIG_ATH_USER_REGD))
+		return 0;
+
 	wiphy->regulatory_flags |= REGULATORY_STRICT_REG |
 				   REGULATORY_CUSTOM_REG;
 
