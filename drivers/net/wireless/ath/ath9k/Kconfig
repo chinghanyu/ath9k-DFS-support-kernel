@@ -94,6 +94,14 @@ config ATH9K_DFS_CERTIFIED
 	  developed. At this point enabling this option won't do anything
 	  except increase code size.
 
+config ATH9K_DFS_ALLOW_UNTESTED
+	bool "Atheros DFS support for untested cards"
+	depends on ATH9K
+	default n
+	---help---
+	  Currently only AR9280 and AR9580 have been tested. Enabling this
+	  will turn on DFS support on untested cards.
+
 config ATH9K_DYNACK
 	bool "Atheros ath9k ACK timeout estimation algorithm (EXPERIMENTAL)"
 	depends on ATH9K

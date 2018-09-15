@@ -2367,6 +2367,8 @@ static u8 fixup_chainmask(u8 chip_chainmask, u8 eeprom_chainmask)
  */
 static bool ath9k_hw_dfs_tested(struct ath_hw *ah)
 {
+	if (config_enabled(CONFIG_ATH9K_DFS_ALLOW_UNTESTED))
+		return true;
 
 	switch (ah->hw_version.macVersion) {
 	/* for temporary testing DFS with 9280 */
